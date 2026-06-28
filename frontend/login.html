@@ -1,185 +1,382 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ITR-2 Filing System | Login</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TaxEase Filing | Login / Sign Up</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body { background: #f8fafc; }
+    .gradient-bg { background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%); }
+    .tab-active { border-bottom: 2px solid #4f46e5; color: #4f46e5; font-weight: 600; }
+  </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="font-sans antialiased min-h-screen flex flex-col">
 
-    <!-- Nav (same as ITR2_N.html) -->
-    <nav class="bg-white shadow-sm border-b">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center h-16">
-                <i class="fas fa-file-invoice text-2xl text-indigo-600"></i>
-                <span class="ml-2 text-xl font-bold text-gray-800">ITR-2 Filing System</span>
-                <span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">AY 2026-27</span>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Login Card -->
-    <div class="flex-1 flex items-center justify-center px-4 py-12">
-        <div class="w-full max-w-md">
-            <div class="bg-white rounded-xl shadow-sm border-l-4 border-indigo-600 p-8">
-
-                <h2 class="text-xl font-bold text-gray-800 mb-1">Sign in to your account</h2>
-                <p class="text-sm text-gray-500 mb-6">Enter your credentials to continue filing</p>
-
-                <!-- Error Banner (hidden by default) -->
-                <div id="errorBanner" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
-                    <i class="fas fa-exclamation-circle text-red-500 text-sm"></i>
-                    <span id="errorMsg" class="text-sm text-red-700"></span>
-                </div>
-
-                <div class="space-y-4">
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Email / PAN <span class="text-red-500">*</span>
-                        </label>
-                        <input
-                            type="text"
-                            id="username"
-                            class="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                            placeholder="you@example.com or ABCDE1234F"
-                            autocomplete="username"
-                        >
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">
-                            Password <span class="text-red-500">*</span>
-                        </label>
-                        <div class="relative">
-                            <input
-                                type="password"
-                                id="password"
-                                class="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
-                                placeholder="Enter your password"
-                                autocomplete="current-password"
-                            >
-                            <button
-                                type="button"
-                                id="togglePassword"
-                                class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-600"
-                            >
-                                <i class="fas fa-eye text-sm"></i>
-                            </button>
-                        </div>
-                    </div>
-
-                    <button
-                        id="loginBtn"
-                        class="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2"
-                    >
-                        <i class="fas fa-sign-in-alt"></i>
-                        <span id="loginBtnText">Sign In</span>
-                    </button>
-                </div>
-
-            </div>
-        </div>
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 h-16 flex justify-between items-center">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <i class="fas fa-file-invoice-dollar text-2xl text-indigo-600"></i>
+        <span class="font-bold text-xl text-gray-800">TaxEase<span class="text-indigo-600">Filing</span></span>
+      </a>
+      <a href="../index.html" class="text-sm text-gray-500 hover:text-indigo-600 flex items-center gap-1">
+        <i class="fas fa-arrow-left text-xs"></i> Back to Home
+      </a>
     </div>
+  </nav>
 
-    <script>
-        // ─── Config ───────────────────────────────────────────────────
-        const API_BASE = 'http://localhost:8000';   // your FastAPI base URL
-        const FORM_PAGE = 'ITR2_N.html';            // redirect after login
+  <!-- Hero strip -->
+  <div class="gradient-bg text-white py-8 text-center px-4">
+    <h1 class="text-2xl font-bold">Welcome to TaxEase Filing</h1>
+    <p class="text-indigo-200 text-sm mt-1">Sign in or create an account to start your ITR journey</p>
+  </div>
 
-        // ─── Toggle password visibility ───────────────────────────────
-        document.getElementById('togglePassword').addEventListener('click', () => {
-            const input = document.getElementById('password');
-            const icon  = document.querySelector('#togglePassword i');
-            if (input.type === 'password') {
-                input.type = 'text';
-                icon.classList.replace('fa-eye', 'fa-eye-slash');
-            } else {
-                input.type = 'password';
-                icon.classList.replace('fa-eye-slash', 'fa-eye');
-            }
+  <!-- Card -->
+  <div class="flex-1 flex items-start justify-center px-4 py-10">
+    <div class="w-full max-w-md">
+      <div class="bg-white rounded-2xl shadow-md overflow-hidden">
+
+        <!-- Tabs -->
+        <div class="flex border-b border-gray-200">
+          <button id="tab-login" onclick="switchTab('login')"
+            class="flex-1 py-3 text-sm tab-active">Sign In</button>
+          <button id="tab-signup" onclick="switchTab('signup')"
+            class="flex-1 py-3 text-sm text-gray-500 hover:text-indigo-600">Create Account</button>
+        </div>
+
+        <!-- Error banner -->
+        <div id="errorBanner" class="hidden mx-6 mt-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+          <i class="fas fa-exclamation-circle text-red-500 text-sm"></i>
+          <span id="errorMsg" class="text-sm text-red-700"></span>
+        </div>
+
+        <!-- Success banner -->
+        <div id="successBanner" class="hidden mx-6 mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center gap-2">
+          <i class="fas fa-check-circle text-green-500 text-sm"></i>
+          <span id="successMsg" class="text-sm text-green-700"></span>
+        </div>
+
+        <!-- ===== LOGIN PANEL ===== -->
+        <div id="panel-login" class="p-6">
+          <p class="text-sm text-gray-500 mb-5">Sign in via password or get a one-time OTP.</p>
+
+          <!-- Login method toggle -->
+          <div class="flex rounded-lg bg-gray-100 p-1 mb-5 text-sm">
+            <button id="method-password" onclick="switchLoginMethod('password')"
+              class="flex-1 py-1.5 rounded-md bg-white shadow text-indigo-700 font-medium transition">Password</button>
+            <button id="method-otp" onclick="switchLoginMethod('otp')"
+              class="flex-1 py-1.5 rounded-md text-gray-500 font-medium transition">OTP</button>
+          </div>
+
+          <!-- Password login -->
+          <div id="login-password" class="space-y-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email or PAN</label>
+              <input type="text" id="login-identifier" placeholder="you@example.com or ABCDE1234F"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <div class="relative">
+                <input type="password" id="login-password-input" placeholder="Enter your password"
+                  class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400 pr-10" />
+                <button type="button" onclick="togglePwd('login-password-input', this)"
+                  class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-600">
+                  <i class="fas fa-eye text-sm"></i>
+                </button>
+              </div>
+              <a href="#" class="text-xs text-indigo-600 mt-1 inline-block hover:underline">Forgot password?</a>
+            </div>
+            <button onclick="handlePasswordLogin()"
+              class="w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+              <i class="fas fa-sign-in-alt"></i> Sign In
+            </button>
+          </div>
+
+          <!-- OTP login -->
+          <div id="login-otp" class="space-y-4 hidden">
+            <!-- OTP method: email or phone -->
+            <div class="flex rounded-lg bg-gray-100 p-1 text-sm mb-1">
+              <button id="otp-email-btn" onclick="switchOtpMethod('email')"
+                class="flex-1 py-1.5 rounded-md bg-white shadow text-indigo-700 font-medium transition">Email</button>
+              <button id="otp-phone-btn" onclick="switchOtpMethod('phone')"
+                class="flex-1 py-1.5 rounded-md text-gray-500 font-medium transition">Phone</button>
+            </div>
+
+            <div id="otp-input-step">
+              <label class="block text-sm font-medium text-gray-700 mb-1" id="otp-label">Email Address</label>
+              <input type="text" id="otp-contact" placeholder="you@example.com"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+              <button onclick="sendOtp()"
+                class="mt-3 w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition">
+                Send OTP
+              </button>
+            </div>
+
+            <div id="otp-verify-step" class="hidden">
+              <p class="text-xs text-gray-500 mb-3" id="otp-sent-label">OTP sent to your email.</p>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Enter OTP</label>
+              <input type="text" id="otp-code" placeholder="6-digit OTP" maxlength="6"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono text-center tracking-widest focus:outline-none focus:border-indigo-400" />
+              <button onclick="verifyOtp()"
+                class="mt-3 w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition">
+                Verify & Sign In
+              </button>
+              <button onclick="resetOtp()" class="mt-2 w-full text-xs text-gray-400 hover:text-indigo-600">Resend OTP</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== SIGN UP PANEL ===== -->
+        <div id="panel-signup" class="p-6 hidden">
+          <p class="text-sm text-gray-500 mb-5">Create your TaxEase account. Takes less than a minute.</p>
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">First Name</label>
+                <input type="text" id="signup-first" placeholder="Ramesh"
+                  class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Last Name</label>
+                <input type="text" id="signup-last" placeholder="Kumar"
+                  class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Email Address</label>
+              <input type="email" id="signup-email" placeholder="you@example.com"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Mobile Number</label>
+              <input type="tel" id="signup-phone" placeholder="+91 98765 43210"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">PAN (optional)</label>
+              <input type="text" id="signup-pan" placeholder="ABCDE1234F" maxlength="10"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:border-indigo-400" />
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Password</label>
+              <div class="relative">
+                <input type="password" id="signup-password" placeholder="Min. 8 characters"
+                  class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400 pr-10" />
+                <button type="button" onclick="togglePwd('signup-password', this)"
+                  class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-600">
+                  <i class="fas fa-eye text-sm"></i>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-1">Confirm Password</label>
+              <input type="password" id="signup-confirm" placeholder="Re-enter password"
+                class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+            </div>
+            <label class="flex items-start gap-2 text-xs text-gray-500 cursor-pointer">
+              <input type="checkbox" id="signup-terms" class="mt-0.5 accent-indigo-600">
+              I agree to the <a href="#" class="text-indigo-600 hover:underline ml-1">Terms of Service</a> and <a href="#" class="text-indigo-600 hover:underline">Privacy Policy</a>
+            </label>
+            <button onclick="handleSignup()"
+              class="w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+              <i class="fas fa-user-plus"></i> Create Account
+            </button>
+          </div>
+        </div>
+
+        <p class="text-center text-xs text-gray-400 pb-5 px-6">
+          <i class="fas fa-lock mr-1"></i> Secured with TLS encryption. Your data is safe.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const API_BASE = 'http://localhost:8000';
+    const FORM_PAGE = 'itr2.html';
+    let currentOtpMethod = 'email';
+
+    // ── Tab switching ──────────────────────────────────────────────
+    function switchTab(tab) {
+      hideError(); hideSuccess();
+      document.getElementById('panel-login').classList.toggle('hidden', tab !== 'login');
+      document.getElementById('panel-signup').classList.toggle('hidden', tab !== 'signup');
+      document.getElementById('tab-login').className = 'flex-1 py-3 text-sm ' + (tab === 'login' ? 'tab-active' : 'text-gray-500 hover:text-indigo-600');
+      document.getElementById('tab-signup').className = 'flex-1 py-3 text-sm ' + (tab === 'signup' ? 'tab-active' : 'text-gray-500 hover:text-indigo-600');
+    }
+
+    // ── Login method toggle ────────────────────────────────────────
+    function switchLoginMethod(method) {
+      hideError();
+      const isOtp = method === 'otp';
+      document.getElementById('login-password').classList.toggle('hidden', isOtp);
+      document.getElementById('login-otp').classList.toggle('hidden', !isOtp);
+      document.getElementById('method-password').className = 'flex-1 py-1.5 rounded-md transition font-medium ' + (!isOtp ? 'bg-white shadow text-indigo-700' : 'text-gray-500');
+      document.getElementById('method-otp').className = 'flex-1 py-1.5 rounded-md transition font-medium ' + (isOtp ? 'bg-white shadow text-indigo-700' : 'text-gray-500');
+    }
+
+    // ── OTP contact method ─────────────────────────────────────────
+    function switchOtpMethod(method) {
+      currentOtpMethod = method;
+      const isPhone = method === 'phone';
+      document.getElementById('otp-label').textContent = isPhone ? 'Mobile Number' : 'Email Address';
+      document.getElementById('otp-contact').placeholder = isPhone ? '+91 98765 43210' : 'you@example.com';
+      document.getElementById('otp-contact').type = isPhone ? 'tel' : 'text';
+      document.getElementById('otp-email-btn').className = 'flex-1 py-1.5 rounded-md transition font-medium ' + (!isPhone ? 'bg-white shadow text-indigo-700' : 'text-gray-500');
+      document.getElementById('otp-phone-btn').className = 'flex-1 py-1.5 rounded-md transition font-medium ' + (isPhone ? 'bg-white shadow text-indigo-700' : 'text-gray-500');
+      resetOtp();
+    }
+
+    async function sendOtp() {
+      const contact = document.getElementById('otp-contact').value.trim();
+      if (!contact) { showError('Please enter your ' + (currentOtpMethod === 'phone' ? 'mobile number' : 'email')); return; }
+      hideError();
+      try {
+        const res = await fetch(`${API_BASE}/auth/otp/send`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact, method: currentOtpMethod }),
         });
+        const data = await res.json();
+        if (!res.ok) { showError(data.detail || 'Failed to send OTP'); return; }
+        document.getElementById('otp-input-step').classList.add('hidden');
+        document.getElementById('otp-verify-step').classList.remove('hidden');
+        // In dev mode the API returns the OTP in the response
+        const devHint = data.dev_otp ? ` (Dev OTP: ${data.dev_otp})` : '';
+        document.getElementById('otp-sent-label').textContent = `OTP sent to ${contact}.${devHint}`;
+      } catch (e) {
+        showError('Cannot reach server. Is the backend running?');
+      }
+    }
 
-        // ─── Allow Enter key to submit ────────────────────────────────
-        ['username', 'password'].forEach(id => {
-            document.getElementById(id).addEventListener('keydown', e => {
-                if (e.key === 'Enter') handleLogin();
-            });
+    async function verifyOtp() {
+      const contact = document.getElementById('otp-contact').value.trim();
+      const otp = document.getElementById('otp-code').value.trim();
+      if (!otp) { showError('Please enter the OTP'); return; }
+      hideError();
+      try {
+        const res = await fetch(`${API_BASE}/auth/otp/verify`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ contact, otp }),
         });
+        const data = await res.json();
+        if (!res.ok) { showError(data.detail || 'Invalid OTP'); return; }
+        saveSession(data);
+        showSuccess('OTP verified! Redirecting…');
+        setTimeout(() => window.location.href = FORM_PAGE, 1200);
+      } catch (e) {
+        showError('Cannot reach server. Is the backend running?');
+      }
+    }
 
-        // ─── Login handler ────────────────────────────────────────────
-        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+    function resetOtp() {
+      document.getElementById('otp-input-step').classList.remove('hidden');
+      document.getElementById('otp-verify-step').classList.add('hidden');
+      document.getElementById('otp-code').value = '';
+      hideError();
+    }
 
-        async function handleLogin() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
+    // ── Password login ─────────────────────────────────────────────
+    async function handlePasswordLogin() {
+      const identifier = document.getElementById('login-identifier').value.trim();
+      const password = document.getElementById('login-password-input').value;
+      hideError();
+      if (!identifier || !password) { showError('Please fill in all fields.'); return; }
+      try {
+        // OAuth2 password flow requires application/x-www-form-urlencoded
+        const body = new URLSearchParams({ username: identifier, password });
+        const res = await fetch(`${API_BASE}/auth/login`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: body.toString(),
+        });
+        const data = await res.json();
+        if (!res.ok) { showError(data.detail || 'Invalid credentials'); return; }
+        saveSession(data);
+        showSuccess('Signed in! Redirecting…');
+        setTimeout(() => window.location.href = FORM_PAGE, 1000);
+      } catch (e) {
+        showError('Cannot reach server. Is the backend running?');
+      }
+    }
 
-            hideError();
+    // ── Sign up ────────────────────────────────────────────────────
+    async function handleSignup() {
+      const first = document.getElementById('signup-first').value.trim();
+      const last = document.getElementById('signup-last').value.trim();
+      const email = document.getElementById('signup-email').value.trim();
+      const phone = document.getElementById('signup-phone').value.trim();
+      const pan = document.getElementById('signup-pan').value.trim().toUpperCase();
+      const password = document.getElementById('signup-password').value;
+      const confirm = document.getElementById('signup-confirm').value;
+      const terms = document.getElementById('signup-terms').checked;
+      hideError();
+      if (!first || !last || !email || !phone || !password) { showError('Please fill in all required fields.'); return; }
+      if (password.length < 8) { showError('Password must be at least 8 characters.'); return; }
+      if (password !== confirm) { showError('Passwords do not match.'); return; }
+      if (!terms) { showError('Please accept the Terms of Service.'); return; }
+      try {
+        const res = await fetch(`${API_BASE}/auth/signup`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ first_name: first, last_name: last, email, mobile: phone, password, pan }),
+        });
+        const data = await res.json();
+        if (!res.ok) { showError(data.detail || 'Signup failed'); return; }
+        saveSession(data);
+        // Store profile for KYC/ITR2 prefill
+        const profile = { firstName: first, lastName: last, email, mobile: phone, pan };
+        localStorage.setItem('taxease_profile', JSON.stringify(profile));
+        showSuccess('Account created! Redirecting to KYC…');
+        setTimeout(() => window.location.href = 'kyc.html', 1400);
+      } catch (e) {
+        showError('Cannot reach server. Is the backend running?');
+      }
+    }
 
-            // Basic client-side validation
-            if (!username || !password) {
-                showError('Please enter both username and password.');
-                return;
-            }
+    // ── Session helper ─────────────────────────────────────────────
+    function saveSession(data) {
+      localStorage.setItem('itr2_token', data.access_token);
+      if (data.user) localStorage.setItem('taxease_profile', JSON.stringify({
+        firstName: data.user.first_name || '',
+        lastName:  data.user.last_name  || '',
+        email:     data.user.email      || '',
+        mobile:    data.user.mobile     || '',
+        pan:       data.user.pan        || '',
+      }));
+    }
 
-            setLoading(true);
+    // ── Helpers ────────────────────────────────────────────────────
+    function togglePwd(inputId, btn) {
+      const input = document.getElementById(inputId);
+      const icon = btn.querySelector('i');
+      const isHidden = input.type === 'password';
+      input.type = isHidden ? 'text' : 'password';
+      icon.classList.toggle('fa-eye', !isHidden);
+      icon.classList.toggle('fa-eye-slash', isHidden);
+    }
 
-            try {
-                // FastAPI's OAuth2 form expects application/x-www-form-urlencoded
-                const body = new URLSearchParams({ username, password });
+    function showError(msg) {
+      document.getElementById('errorMsg').textContent = msg;
+      document.getElementById('errorBanner').classList.remove('hidden');
+      document.getElementById('successBanner').classList.add('hidden');
+    }
 
-                const res = await fetch(`${API_BASE}/auth/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: body.toString(),
-                });
+    function showSuccess(msg) {
+      document.getElementById('successMsg').textContent = msg;
+      document.getElementById('successBanner').classList.remove('hidden');
+      document.getElementById('errorBanner').classList.add('hidden');
+    }
 
-                const data = await res.json();
+    function hideError() { document.getElementById('errorBanner').classList.add('hidden'); }
+    function hideSuccess() { document.getElementById('successBanner').classList.add('hidden'); }
 
-                if (!res.ok) {
-                    // FastAPI returns { detail: "..." } on 401/422
-                    showError(data.detail || 'Login failed. Please try again.');
-                    return;
-                }
-
-                // Store the JWT — now every fetch() in ITR2_N.html can use it
-                localStorage.setItem('itr2_token', data.access_token);
-                localStorage.setItem('itr2_user',  JSON.stringify(data.user ?? {}));
-
-                window.location.href = FORM_PAGE;
-
-            } catch (err) {
-                // Network error or server down
-                showError('Cannot reach the server. Please check your connection.');
-            } finally {
-                setLoading(false);
-            }
-        }
-
-        // ─── Helpers ──────────────────────────────────────────────────
-        function showError(msg) {
-            document.getElementById('errorMsg').textContent = msg;
-            document.getElementById('errorBanner').classList.remove('hidden');
-        }
-
-        function hideError() {
-            document.getElementById('errorBanner').classList.add('hidden');
-        }
-
-        function setLoading(on) {
-            const btn  = document.getElementById('loginBtn');
-            const text = document.getElementById('loginBtnText');
-            btn.disabled = on;
-            btn.classList.toggle('opacity-60', on);
-            text.textContent = on ? 'Signing in…' : 'Sign In';
-        }
-
-        // ─── If already logged in, skip login page ────────────────────
-        if (localStorage.getItem('itr2_token')) {
-            window.location.href = FORM_PAGE;
-        }
-    </script>
-
+    // Skip if already logged in
+    if (localStorage.getItem('itr2_token')) window.location.href = FORM_PAGE;
+  </script>
 </body>
 </html>

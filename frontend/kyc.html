@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>KYC Verification | TaxEase Filing</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    body { background: #f8fafc; }
+    .gradient-bg { background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%); }
+  </style>
+</head>
+<body class="font-sans antialiased">
+
+  <!-- Navbar -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
+    <div class="max-w-4xl mx-auto px-6 h-16 flex justify-between items-center">
+      <a href="../index.html" class="flex items-center space-x-2">
+        <i class="fas fa-file-invoice-dollar text-2xl text-indigo-600"></i>
+        <span class="font-bold text-xl text-gray-800">TaxEase<span class="text-indigo-600">Filing</span></span>
+      </a>
+      <a href="../index.html" class="text-sm text-gray-500 hover:text-indigo-600 flex items-center gap-1">
+        <i class="fas fa-arrow-left text-xs"></i> Back
+      </a>
+    </div>
+  </nav>
+
+  <!-- Header -->
+  <div class="gradient-bg text-white py-10 px-6 text-center">
+    <div class="max-w-xl mx-auto">
+      <div class="w-16 h-16 rounded-full bg-white/10 flex items-center justify-center mx-auto mb-4">
+        <i class="fas fa-id-card text-3xl text-white"></i>
+      </div>
+      <h1 class="text-2xl font-bold">KYC Verification</h1>
+      <p class="text-indigo-200 mt-2 text-sm">Complete your identity verification to proceed with ITR filing</p>
+    </div>
+  </div>
+
+  <!-- Progress steps -->
+  <div class="max-w-2xl mx-auto px-6 mt-8">
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center text-sm font-bold">1</div>
+        <span class="text-xs mt-1 text-indigo-600 font-medium">Personal</span>
+      </div>
+      <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+      <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-bold">2</div>
+        <span class="text-xs mt-1 text-gray-400">Identity</span>
+      </div>
+      <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+      <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-bold">3</div>
+        <span class="text-xs mt-1 text-gray-400">Address</span>
+      </div>
+      <div class="flex-1 h-0.5 bg-gray-200 mx-2"></div>
+      <div class="flex flex-col items-center">
+        <div class="w-8 h-8 rounded-full bg-gray-200 text-gray-500 flex items-center justify-center text-sm font-bold">4</div>
+        <span class="text-xs mt-1 text-gray-400">Review</span>
+      </div>
+    </div>
+
+    <!-- Step 1: Personal Details -->
+    <div id="step-1" class="bg-white rounded-2xl shadow-md p-6 mb-6">
+      <h2 class="font-semibold text-lg text-gray-800 mb-5 flex items-center gap-2">
+        <i class="fas fa-user text-indigo-500"></i> Personal Details
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Full Name (as on PAN)</label>
+          <input type="text" placeholder="Enter full name"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Date of Birth</label>
+          <input type="date"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Mobile Number</label>
+          <input type="tel" placeholder="+91 XXXXX XXXXX"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Email Address</label>
+          <input type="email" placeholder="you@example.com"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-sm text-gray-500 mb-1">Gender</label>
+          <div class="flex gap-4 mt-1">
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <input type="radio" name="gender" value="male" class="accent-indigo-600"> Male
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <input type="radio" name="gender" value="female" class="accent-indigo-600"> Female
+            </label>
+            <label class="flex items-center gap-2 text-sm cursor-pointer">
+              <input type="radio" name="gender" value="other" class="accent-indigo-600"> Other
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Identity Documents -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+      <h2 class="font-semibold text-lg text-gray-800 mb-5 flex items-center gap-2">
+        <i class="fas fa-id-badge text-indigo-500"></i> Identity Documents
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">PAN Number</label>
+          <input type="text" placeholder="ABCDE1234F" maxlength="10"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono uppercase focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Aadhaar Number</label>
+          <input type="text" placeholder="XXXX XXXX XXXX" maxlength="14"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm font-mono focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Upload PAN Card</label>
+          <div class="border-2 border-dashed border-gray-200 rounded-lg px-3 py-4 text-center hover:border-indigo-300 cursor-pointer">
+            <i class="fas fa-cloud-upload-alt text-gray-300 text-2xl mb-1"></i>
+            <p class="text-xs text-gray-400">Click to upload or drag & drop</p>
+            <input type="file" accept="image/*,.pdf" class="hidden" />
+          </div>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">Upload Aadhaar Card</label>
+          <div class="border-2 border-dashed border-gray-200 rounded-lg px-3 py-4 text-center hover:border-indigo-300 cursor-pointer">
+            <i class="fas fa-cloud-upload-alt text-gray-300 text-2xl mb-1"></i>
+            <p class="text-xs text-gray-400">Click to upload or drag & drop</p>
+            <input type="file" accept="image/*,.pdf" class="hidden" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 3: Address -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-6">
+      <h2 class="font-semibold text-lg text-gray-800 mb-5 flex items-center gap-2">
+        <i class="fas fa-map-marker-alt text-indigo-500"></i> Address Details
+      </h2>
+      <div class="grid sm:grid-cols-2 gap-4">
+        <div class="sm:col-span-2">
+          <label class="block text-sm text-gray-500 mb-1">Flat / House No., Street</label>
+          <input type="text" placeholder="123, Main Street"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">City</label>
+          <input type="text" placeholder="Mumbai"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">State</label>
+          <select class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400 bg-white">
+            <option value="">Select state</option>
+            <option>Maharashtra</option>
+            <option>Delhi</option>
+            <option>Karnataka</option>
+            <option>Tamil Nadu</option>
+            <option>Uttar Pradesh</option>
+            <option>West Bengal</option>
+            <option>Gujarat</option>
+            <option>Rajasthan</option>
+            <option>Telangana</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm text-gray-500 mb-1">PIN Code</label>
+          <input type="text" placeholder="400001" maxlength="6"
+            class="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-indigo-400" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Declaration + Submit -->
+    <div class="bg-white rounded-2xl shadow-md p-6 mb-8">
+      <label class="flex items-start gap-3 cursor-pointer text-sm text-gray-600">
+        <input type="checkbox" class="mt-0.5 accent-indigo-600">
+        I declare that the information provided is true and correct to the best of my knowledge. I consent to verification of my identity documents.
+      </label>
+      <button onclick="submitKYC()"
+        class="mt-5 w-full bg-indigo-600 text-white py-3 rounded-xl font-semibold hover:bg-indigo-700 transition flex items-center justify-center gap-2">
+        <i class="fas fa-shield-alt"></i> Submit KYC for Verification
+      </button>
+      <p class="text-center text-xs text-gray-400 mt-3"><i class="fas fa-lock mr-1"></i> Your data is encrypted and secure</p>
+    </div>
+  </div>
+
+  <script>
+    // Make upload drop zones clickable
+    document.querySelectorAll('.border-dashed').forEach(zone => {
+      zone.addEventListener('click', () => zone.querySelector('input[type="file"]')?.click());
+      zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('border-indigo-400'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('border-indigo-400'));
+      zone.addEventListener('drop', e => {
+        e.preventDefault();
+        zone.classList.remove('border-indigo-400');
+        const file = e.dataTransfer.files[0];
+        if (file) zone.querySelector('p').textContent = file.name;
+      });
+      zone.querySelector('input')?.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) zone.querySelector('p').textContent = file.name;
+      });
+    });
+
+    function submitKYC() {
+      // Collect all fields and save to localStorage for ITR2 prefill
+      const allInputs = document.querySelectorAll('input:not([type=radio]):not([type=checkbox]):not([type=file]), select');
+      const fields = ['fullName','dob','mobile','email','pan','aadhaar','addressLine1','city','state','pincode'];
+      const labels = ['Full Name','Date of Birth','Mobile','Email','PAN','Aadhaar','Address','City','State','PIN Code'];
+
+      // Grab by order of appearance
+      const values = Array.from(allInputs);
+      const kyc = {
+        fullName:    values[0]?.value?.trim() || '',
+        dob:         values[1]?.value?.trim() || '',
+        mobile:      values[2]?.value?.trim() || '',
+        email:       values[3]?.value?.trim() || '',
+        pan:         values[4]?.value?.trim().toUpperCase() || '',
+        aadhaar:     values[5]?.value?.trim() || '',
+        addressLine1:values[8]?.value?.trim() || '',
+        city:        values[9]?.value?.trim() || '',
+        state:       values[10]?.value?.trim() || '',
+        pincode:     values[11]?.value?.trim() || '',
+      };
+
+      // Merge with any existing signup profile
+      const existing = JSON.parse(localStorage.getItem('taxease_profile') || '{}');
+      const merged = Object.assign({}, existing, kyc);
+      // Split full name into first/last if not already set
+      if (kyc.fullName && !merged.firstName) {
+        const parts = kyc.fullName.split(' ');
+        merged.firstName = parts[0] || '';
+        merged.lastName  = parts.slice(1).join(' ') || '';
+      }
+      localStorage.setItem('taxease_profile', JSON.stringify(merged));
+      localStorage.setItem('kyc_complete', '1');
+
+      alert('KYC submitted successfully! Our team will verify your documents within 24 hours.');
+    }
+  </script>
+</body>
+</html>

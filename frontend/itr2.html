@@ -26,10 +26,12 @@
 <nav class="bg-white shadow-sm sticky top-0 z-50 border-b">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between items-center h-16">
-            <div class="flex items-center">
-                <i class="fas fa-file-invoice text-2xl text-indigo-600"></i>
-                <span class="ml-2 text-xl font-bold text-gray-800">ITR-2 Filing System</span>
-                <span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">AY 2026-27</span>
+            <div class="flex items-center gap-4">
+                <a href="../index.html" class="flex items-center space-x-2">
+                    <i class="fas fa-file-invoice-dollar text-2xl text-indigo-600"></i>
+                    <span class="font-bold text-xl text-gray-800">TaxEase<span class="text-indigo-600">Filing</span></span>
+                </a>
+                <span class="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">AY 2026-27</span>
             </div>
             <div class="flex gap-2">
                 <button id="saveDraftBtn" class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
@@ -732,6 +734,57 @@
         });
         updateAllProperties();
     }, 100);
+
+    // ── Prefill from KYC / signup profile ──────────────────────────
+    (function prefillFromKYC() {
+        const profile = JSON.parse(localStorage.getItem('taxease_profile') || '{}');
+        if (!profile || !Object.keys(profile).length) return;
+
+        const set = (id, val) => {
+            const el = document.getElementById(id);
+            if (el && val) el.value = val;
+        };
+
+        // Name — handle both "fullName" (from KYC) and "firstName/lastName" (from signup)
+        if (profile.fullName) {
+            const parts = profile.fullName.trim().split(' ');
+            set('firstName', parts[0] || '');
+            set('lastName',  parts.slice(1).join(' ') || '');
+        } else {
+            set('firstName', profile.firstName || '');
+            set('lastName',  profile.lastName  || '');
+        }
+
+        set('pan',          profile.pan);
+        set('aadhaar',      profile.aadhaar);
+        set('dob',          profile.dob);
+        set('email',        profile.email);
+        set('mobile',       profile.mobile);
+        set('addressLine1', profile.addressLine1);
+        set('city',         profile.city);
+        set('pincode',      profile.pincode);
+
+        // State — match by text label
+        if (profile.state) {
+            const stateEl = document.getElementById('state');
+            if (stateEl) {
+                Array.from(stateEl.options).forEach(opt => {
+                    if (opt.text.toLowerCase().includes(profile.state.toLowerCase())) {
+                        stateEl.value = opt.value;
+                    }
+                });
+            }
+        }
+
+        // Show a subtle notice
+        const notice = document.createElement('div');
+        notice.className = 'max-w-4xl mx-auto px-4 mt-4';
+        notice.innerHTML = `<div class="bg-indigo-50 border border-indigo-200 rounded-lg px-4 py-2 text-sm text-indigo-700 flex items-center gap-2">
+            <i class="fas fa-magic"></i> Personal details pre-filled from your KYC. Please review and update if needed.
+            <button onclick="this.parentElement.parentElement.remove()" class="ml-auto text-indigo-400 hover:text-indigo-600"><i class="fas fa-times"></i></button>
+        </div>`;
+        document.querySelector('.max-w-4xl')?.before(notice);
+    })();
 </script>
 
 </body>
