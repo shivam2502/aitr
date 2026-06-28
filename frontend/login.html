@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITR-2 Filing System | Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body class="bg-gray-50 min-h-screen flex flex-col">
+
+    <!-- Nav (same as ITR2_N.html) -->
+    <nav class="bg-white shadow-sm border-b">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center h-16">
+                <i class="fas fa-file-invoice text-2xl text-indigo-600"></i>
+                <span class="ml-2 text-xl font-bold text-gray-800">ITR-2 Filing System</span>
+                <span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">AY 2026-27</span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Card -->
+    <div class="flex-1 flex items-center justify-center px-4 py-12">
+        <div class="w-full max-w-md">
+            <div class="bg-white rounded-xl shadow-sm border-l-4 border-indigo-600 p-8">
+
+                <h2 class="text-xl font-bold text-gray-800 mb-1">Sign in to your account</h2>
+                <p class="text-sm text-gray-500 mb-6">Enter your credentials to continue filing</p>
+
+                <!-- Error Banner (hidden by default) -->
+                <div id="errorBanner" class="hidden mb-4 p-3 bg-red-50 border border-red-200 rounded-lg flex items-center gap-2">
+                    <i class="fas fa-exclamation-circle text-red-500 text-sm"></i>
+                    <span id="errorMsg" class="text-sm text-red-700"></span>
+                </div>
+
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Email / PAN <span class="text-red-500">*</span>
+                        </label>
+                        <input
+                            type="text"
+                            id="username"
+                            class="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                            placeholder="you@example.com or ABCDE1234F"
+                            autocomplete="username"
+                        >
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">
+                            Password <span class="text-red-500">*</span>
+                        </label>
+                        <div class="relative">
+                            <input
+                                type="password"
+                                id="password"
+                                class="w-full border rounded-lg p-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 pr-10"
+                                placeholder="Enter your password"
+                                autocomplete="current-password"
+                            >
+                            <button
+                                type="button"
+                                id="togglePassword"
+                                class="absolute inset-y-0 right-0 px-3 text-gray-400 hover:text-gray-600"
+                            >
+                                <i class="fas fa-eye text-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+
+                    <button
+                        id="loginBtn"
+                        class="w-full bg-indigo-600 text-white py-2 rounded-lg text-sm font-medium hover:bg-indigo-700 transition flex items-center justify-center gap-2"
+                    >
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span id="loginBtnText">Sign In</span>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ─── Config ───────────────────────────────────────────────────
+        const API_BASE = 'http://localhost:8000';   // your FastAPI base URL
+        const FORM_PAGE = 'ITR2_N.html';            // redirect after login
+
+        // ─── Toggle password visibility ───────────────────────────────
+        document.getElementById('togglePassword').addEventListener('click', () => {
+            const input = document.getElementById('password');
+            const icon  = document.querySelector('#togglePassword i');
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        });
+
+        // ─── Allow Enter key to submit ────────────────────────────────
+        ['username', 'password'].forEach(id => {
+            document.getElementById(id).addEventListener('keydown', e => {
+                if (e.key === 'Enter') handleLogin();
+            });
+        });
+
+        // ─── Login handler ────────────────────────────────────────────
+        document.getElementById('loginBtn').addEventListener('click', handleLogin);
+
+        async function handleLogin() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            hideError();
+
+            // Basic client-side validation
+            if (!username || !password) {
+                showError('Please enter both username and password.');
+                return;
+            }
+
+            setLoading(true);
+
+            try {
+                // FastAPI's OAuth2 form expects application/x-www-form-urlencoded
+                const body = new URLSearchParams({ username, password });
+
+                const res = await fetch(`${API_BASE}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: body.toString(),
+                });
+
+                const data = await res.json();
+
+                if (!res.ok) {
+                    // FastAPI returns { detail: "..." } on 401/422
+                    showError(data.detail || 'Login failed. Please try again.');
+                    return;
+                }
+
+                // Store the JWT — now every fetch() in ITR2_N.html can use it
+                localStorage.setItem('itr2_token', data.access_token);
+                localStorage.setItem('itr2_user',  JSON.stringify(data.user ?? {}));
+
+                window.location.href = FORM_PAGE;
+
+            } catch (err) {
+                // Network error or server down
+                showError('Cannot reach the server. Please check your connection.');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // ─── Helpers ──────────────────────────────────────────────────
+        function showError(msg) {
+            document.getElementById('errorMsg').textContent = msg;
+            document.getElementById('errorBanner').classList.remove('hidden');
+        }
+
+        function hideError() {
+            document.getElementById('errorBanner').classList.add('hidden');
+        }
+
+        function setLoading(on) {
+            const btn  = document.getElementById('loginBtn');
+            const text = document.getElementById('loginBtnText');
+            btn.disabled = on;
+            btn.classList.toggle('opacity-60', on);
+            text.textContent = on ? 'Signing in…' : 'Sign In';
+        }
+
+        // ─── If already logged in, skip login page ────────────────────
+        if (localStorage.getItem('itr2_token')) {
+            window.location.href = FORM_PAGE;
+        }
+    </script>
+
+</body>
+</html>

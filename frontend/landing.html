@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>TaxEase | Smart ITR Filing Platform</title>
+  <!-- Google Fonts + Tailwind + FontAwesome -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    /* Custom scroll & subtle transitions */
+    body { background: #f8fafc; }
+    .card-hover {
+      transition: all 0.2s ease;
+    }
+    .card-hover:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -12px rgba(0,0,0,0.1);
+    }
+    .gradient-bg {
+      background: linear-gradient(135deg, #0f2b3d 0%, #1b4a6e 100%);
+    }
+    .step-line {
+      position: relative;
+    }
+    .step-line:not(:last-child):after {
+      content: '';
+      position: absolute;
+      top: 2rem;
+      left: 2rem;
+      width: calc(100% - 2rem);
+      height: 2px;
+      background: #e2e8f0;
+      z-index: 0;
+    }
+    @media (max-width: 768px) {
+      .step-line:not(:last-child):after { display: none; }
+    }
+  </style>
+</head>
+<body class="font-sans antialiased">
+
+  <!-- ========================== NAVBAR ========================== -->
+  <nav class="bg-white shadow-sm sticky top-0 z-50 border-b border-gray-200">
+    <div class="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-2">
+          <i class="fas fa-file-invoice-dollar text-2xl text-indigo-600"></i>
+          <span class="font-bold text-xl text-gray-800">TaxEase<span class="text-indigo-600">Filing</span></span>
+        </div>
+        <div class="hidden md:flex space-x-8">
+          <a href="#" class="text-gray-700 hover:text-indigo-600 font-medium">Features</a>
+          <a href="#pricing" class="text-gray-700 hover:text-indigo-600 font-medium">Pricing</a>
+          <a href="#how-it-works" class="text-gray-700 hover:text-indigo-600 font-medium">How it works</a>
+          <a href="#" class="text-gray-700 hover:text-indigo-600 font-medium">Support</a>
+        </div>
+        <div class="flex items-center space-x-3">
+          <a href="#" class="px-4 py-2 text-sm font-medium text-gray-700 hover:text-indigo-600 transition">Login</a>
+          <a href="#" class="px-5 py-2 bg-indigo-600 text-white text-sm font-medium rounded-full shadow hover:bg-indigo-700 transition">Get Started</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ========================== HERO + LANDING SECTION ========================== -->
+  <section class="gradient-bg text-white">
+    <div class="max-w-7xl mx-auto px-6 py-20 md:py-28 lg:py-32">
+      <div class="grid md:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center bg-white/20 rounded-full px-4 py-1.5 text-sm backdrop-blur-sm mb-5">
+            <i class="fas fa-shield-alt mr-2 text-yellow-300"></i> <span>Income Tax e-filing simplified</span>
+          </div>
+          <h1 class="text-4xl md:text-5xl font-extrabold leading-tight">File ITR-2 & ITR-3 with <span class="text-yellow-300">real-time tax calculation</span></h1>
+          <p class="text-lg text-gray-100 mt-5 max-w-lg">Automated document upload, draft PDF generation, and expert admin review. 100% digital KYC & e-filing workflow.</p>
+          <div class="flex flex-wrap gap-4 mt-8">
+            <a href="#signup-demo" class="bg-white text-indigo-700 px-6 py-3 rounded-lg font-semibold shadow-lg hover:bg-gray-100 transition flex items-center"><i class="fas fa-user-plus mr-2"></i> Start Filing Now</a>
+            <a href="#pricing" class="border border-white/40 px-6 py-3 rounded-lg font-semibold hover:bg-white/10 transition"><i class="fas fa-tag mr-2"></i> View Pricing</a>
+          </div>
+        </div>
+        <div class="relative hidden md:block">
+          <div class="bg-white/10 backdrop-blur-sm rounded-2xl p-5 shadow-xl border border-white/20">
+            <div class="flex items-center justify-between border-b border-white/20 pb-2 mb-3"><span class="font-mono text-sm">📄 Tax Summary Preview</span><i class="fas fa-chart-line text-indigo-200"></i></div>
+            <div class="space-y-2 text-sm"><div class="flex justify-between"><span>Gross Total Income</span><span>₹ 12,50,000</span></div><div class="flex justify-between"><span>Deductions 80C</span><span>₹ 1,50,000</span></div><div class="flex justify-between font-semibold"><span>Tax Payable</span><span>₹ 1,24,800</span></div></div>
+            <div class="mt-3 h-2 w-full bg-gray-300/40 rounded-full"><div class="w-3/5 h-2 bg-green-400 rounded-full"></div></div>
+            <p class="text-xs mt-2 text-indigo-100">✓ Real-time calculation · Updated every input</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ========================== PRICING CARDS ========================== -->
+  <div id="pricing" class="max-w-7xl mx-auto px-6 py-20">
+    <div class="text-center max-w-2xl mx-auto">
+      <span class="text-indigo-600 font-semibold text-sm uppercase tracking-wider">Plans</span>
+      <h2 class="text-3xl md:text-4xl font-bold text-gray-800 mt-2">Simple, transparent pricing</h2>
+      <p class="text-gray-500 mt-4">No hidden fees · Pay only when you file</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-8 mt-12">
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-hover"><i class="fas fa-user text-3xl text-indigo-500"></i><h3 class="text-xl font-bold mt-4">ITR-2 (Individuals)</h3><p class="text-gray-500 mt-2">Capital gains, foreign assets, multiple house property</p><div class="mt-6"><span class="text-4xl font-black">₹999</span><span class="text-gray-500"> + GST</span></div><ul class="mt-5 space-y-2 text-sm"><li><i class="fas fa-check-circle text-green-500 w-5"></i> KYC + Document upload</li><li><i class="fas fa-check-circle text-green-500"></i> Real-time tax calculator</li><li><i class="fas fa-check-circle text-green-500"></i> PDF draft generation</li></ul><button class="mt-6 w-full bg-indigo-50 text-indigo-700 py-2 rounded-xl font-medium hover:bg-indigo-100">Choose Plan</button></div>
+      <div class="bg-white rounded-2xl shadow-lg border-2 border-indigo-200 p-6 relative card-hover"><span class="absolute -top-3 left-6 bg-indigo-600 text-white text-xs px-3 py-1 rounded-full">Most popular</span><i class="fas fa-briefcase text-3xl text-indigo-600"></i><h3 class="text-xl font-bold mt-4">ITR-3 (Business/Profession)</h3><p class="text-gray-500 mt-2">Presumptive income, business audit, partnership</p><div class="mt-6"><span class="text-4xl font-black">₹1,899</span><span class="text-gray-500"> + GST</span></div><ul class="mt-5 space-y-2 text-sm"><li><i class="fas fa-check-circle text-green-500"></i> Everything in ITR-2</li><li><i class="fas fa-check-circle text-green-500"></i> P&L / Balance Sheet support</li><li><i class="fas fa-check-circle text-green-500"></i> Dedicated admin review</li></ul><button class="mt-6 w-full bg-indigo-600 text-white py-2 rounded-xl font-medium hover:bg-indigo-700">Start Filing</button></div>
+      <div class="bg-white rounded-2xl shadow-md p-6 border border-gray-100 card-hover"><i class="fas fa-building text-3xl text-indigo-500"></i><h3 class="text-xl font-bold mt-4">CA Assisted</h3><p class="text-gray-500 mt-2">End-to-end expert e-filing + priority support</p><div class="mt-6"><span class="text-4xl font-black">₹4,499</span><span class="text-gray-500"> inclusive</span></div><ul class="mt-5 space-y-2 text-sm"><li><i class="fas fa-check-circle text-green-500"></i> Full ITR-2/3 + Manual e-filing workflow</li><li><i class="fas fa-check-circle text-green-500"></i> Document verification & status tracking</li><li><i class="fas fa-check-circle text-green-500"></i> Email notifications</li></ul><button class="mt-6 w-full bg-gray-800 text-white py-2 rounded-xl font-medium hover:bg-gray-900">Get CA Support</button></div>
+    </div>
+  </div>
+
+  <!-- ========================== USER JOURNEY DASHBOARD + FORMS PREVIEW ========================== -->
+  <div id="signup-demo" class="bg-gray-50 py-16 border-t border-gray-200">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="text-center mb-12">
+        <h2 class="text-3xl font-bold text-gray-800">Complete client dashboard preview</h2>
+        <p class="text-gray-500 mt-2">KYC → ITR forms → Upload → Tax computation → Payment & e-file status</p>
+      </div>
+      <!-- mock user dashboard: shows tracking, document upload, real-time calc -->
+      <div class="grid lg:grid-cols-3 gap-8">
+        <!-- Left: KYC + ITR forms quick access -->
+        <div class="bg-white rounded-2xl shadow-md p-5">
+          <div class="flex items-center gap-3 border-b pb-3"><i class="fas fa-id-card text-indigo-600 text-xl"></i><h3 class="font-semibold text-lg">KYC Form</h3><span class="text-xs bg-green-100 text-green-700 px-2 rounded-full">verified</span></div>
+          <div class="mt-3 space-y-2 text-sm"><div><label class="text-gray-500">PAN</label><p class="font-mono">ABCDE1234F</p></div><div><label class="text-gray-500">Full Name</label><p>Ramesh Kumar</p></div><div><label class="text-gray-500">Aadhaar linked</label><i class="fas fa-check-circle text-green-500 ml-1"></i></div><button class="text-indigo-600 text-sm mt-1">Edit KYC</button></div>
+          <div class="mt-5 pt-3 border-t"><h4 class="font-medium flex items-center"><i class="fas fa-file-alt mr-2 text-indigo-500"></i>ITR-3 (Business) 2024-25</h4><div class="grid grid-cols-2 gap-2 mt-2 text-xs"><span class="bg-gray-100 p-2 rounded">Gross receipts ₹48L</span><span class="bg-gray-100 p-2 rounded">Net Profit ₹6.2L</span></div><button class="w-full mt-3 bg-indigo-50 text-indigo-700 py-2 rounded-lg text-sm font-medium">Continue Filling ITR-3</button></div>
+        </div>
+
+        <!-- MIDDLE: Document upload + real-time tax calculator -->
+        <div class="bg-white rounded-2xl shadow-md p-5">
+          <div><i class="fas fa-cloud-upload-alt text-indigo-600 text-xl"></i><h3 class="font-semibold text-lg inline-block ml-2">Document Upload</h3></div>
+          <div class="space-y-2 mt-2 text-sm">
+            <div class="flex justify-between items-center border p-2 rounded-lg"><span>Form 16</span><span class="text-green-600"><i class="fas fa-check-circle"></i> uploaded</span></div>
+            <div class="flex justify-between items-center border p-2 rounded-lg"><span>Capital Gains statement</span><button class="text-xs bg-gray-200 px-3 py-1 rounded-full">Upload</button></div>
+            <div class="flex justify-between items-center border p-2 rounded-lg"><span>Bank statement (P&L)</span><button class="text-xs bg-gray-200 px-3 py-1 rounded-full">Upload</button></div>
+          </div>
+          <div class="mt-5 bg-indigo-50 rounded-xl p-4">
+            <div class="flex justify-between items-center"><span class="font-semibold">Real-time Tax Liability</span><i class="fas fa-calculator text-indigo-600"></i></div>
+            <div class="mt-2 space-y-1 text-sm"><div class="flex justify-between"><span>Income from Salary</span><span>₹8,20,000</span></div><div class="flex justify-between"><span>Business Income</span><span>₹4,50,000</span></div><div class="flex justify-between font-bold border-t pt-1 mt-1"><span>Total Tax Payable</span><span>₹1,12,500</span></div></div>
+            <button class="w-full mt-3 bg-indigo-600 text-white py-2 rounded-lg text-sm">Recalculate with new data</button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Filing status + Payment + PDF draft -->
+        <div class="bg-white rounded-2xl shadow-md p-5">
+          <div class="flex justify-between items-center"><h3 class="font-semibold"><i class="fas fa-chart-line mr-1"></i> Filing Status</h3><span class="bg-yellow-100 text-yellow-700 text-xs px-2 py-1 rounded-full">In Progress</span></div>
+          <div class="mt-4 space-y-3">
+            <div class="flex justify-between text-sm"><span>✅ KYC completed</span><i class="fas fa-check text-green-500"></i></div>
+            <div class="flex justify-between text-sm"><span>📄 ITR form pending review</span><i class="fas fa-spinner text-yellow-500"></i></div>
+            <div class="flex justify-between text-sm"><span>📂 Documents (2/3 uploaded)</span><i class="fas fa-hourglass-half text-gray-400"></i></div>
+            <div><button class="w-full border border-indigo-300 text-indigo-700 py-2 rounded-lg text-sm flex items-center justify-center"><i class="fas fa-file-pdf mr-2"></i> Generate Draft PDF</button></div>
+            <div><button class="w-full bg-green-600 text-white py-2 rounded-lg flex items-center justify-center"><i class="fas fa-rupee-sign mr-2"></i> Pay & Proceed to e-Filing</button></div>
+            <div class="text-center text-xs text-gray-400 mt-2"><i class="far fa-envelope"></i> Email notifications will be sent</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- additional reminder for ITR-2/3 data collection forms advanced fields -->
+      <div class="bg-white rounded-xl shadow-sm mt-8 p-5 border border-gray-200">
+        <div class="flex flex-wrap gap-8 items-start justify-between">
+          <div><i class="fas fa-chart-pie text-indigo-500"></i> <span class="font-medium">ITR-2 advanced fields: </span><span class="text-sm text-gray-600">Capital gains from listed shares, foreign accounts, house property details</span></div>
+          <div><i class="fas fa-chart-line text-indigo-500"></i> <span class="font-medium">ITR-3 business schedule: </span><span class="text-sm text-gray-600">Turnover, audit u/s 44AB, deprecation, partner salary</span></div>
+          <button class="text-indigo-600 text-sm bg-indigo-50 px-4 py-1 rounded-full">Fill Detailed ITR Form →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========================== ADMIN DASHBOARD PREVIEW SECTION ========================== -->
+  <div class="max-w-7xl mx-auto px-6 py-16">
+    <div class="bg-gray-900 rounded-2xl shadow-2xl overflow-hidden border border-gray-800">
+      <div class="bg-gray-800 px-6 py-4 flex flex-wrap justify-between items-center border-b border-gray-700">
+        <div><i class="fas fa-user-shield text-indigo-400 mr-2"></i><span class="text-white font-semibold">Admin Control Panel</span><span class="text-gray-400 text-sm ml-3">Dashboard · User Mgmt · Document Review</span></div>
+        <div class="flex space-x-3"><span class="text-xs bg-gray-700 text-gray-300 px-3 py-1 rounded-full"><i class="far fa-bell"></i> 4 pending reviews</span></div>
+      </div>
+      <div class="p-6 grid lg:grid-cols-2 gap-8">
+        <!-- left: user management + document review -->
+        <div class="space-y-6">
+          <div class="bg-gray-800/50 rounded-xl p-4">
+            <h4 class="text-white font-medium flex items-center"><i class="fas fa-users mr-2 text-indigo-300"></i>User Management & Return Status</h4>
+            <div class="mt-3 space-y-2 text-sm">
+              <div class="flex justify-between text-gray-300 border-b border-gray-700 pb-2"><span>Client</span><span>ITR Type</span><span>Status</span><span>Action</span></div>
+              <div class="flex justify-between items-center"><span>Ramesh K.</span><span>ITR-3</span><span class="text-yellow-300">Docs pending</span><button class="bg-gray-700 text-xs px-2 py-1 rounded">review</button></div>
+              <div class="flex justify-between items-center"><span>Priya S.</span><span>ITR-2</span><span class="text-green-400">e-filed</span><button class="bg-gray-700 text-xs px-2 py-1 rounded">view</button></div>
+              <div class="flex justify-between items-center"><span>Anil M.</span><span>ITR-3 (CA)</span><span class="text-blue-300">under processing</span><button class="bg-gray-700 text-xs px-2 py-1 rounded">update</button></div>
+            </div>
+            <button class="mt-4 text-indigo-300 text-sm flex items-center"><i class="fas fa-export-alt mr-1"></i> Export client data (CSV/Excel)</button>
+          </div>
+
+          <div class="bg-gray-800/50 rounded-xl p-4">
+            <h4 class="text-white font-medium"><i class="fas fa-file-signature mr-2 text-indigo-300"></i>Document Review & Return status updates</h4>
+            <div class="mt-3 text-sm text-gray-300 space-y-2">
+              <div class="flex justify-between"><span>📄 Form16_Ramesh.pdf</span><span class="text-green-300">verified</span><i class="fas fa-check-circle text-green-400"></i></div>
+              <div class="flex justify-between"><span>📊 Business P&L_Anil.xlsx</span><span class="text-yellow-300">pending verification</span><button class="text-indigo-300 text-xs">approve</button></div>
+              <div class="flex justify-between"><span>📑 Capital Gains statement</span><span>under scrutiny</span><select class="bg-gray-700 text-xs rounded"><option>Mark as verified</option><option>Request re-upload</option></select></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- right: manual e-filing workflow + admin operations -->
+        <div class="bg-gray-800/50 rounded-xl p-4">
+          <h4 class="text-white font-medium flex items-center"><i class="fas fa-upload mr-2 text-indigo-300"></i>Manual e-filing workflow (Admin)</h4>
+          <div class="mt-3 space-y-4">
+            <div class="bg-gray-900 p-3 rounded-lg border border-gray-700">
+              <div class="flex justify-between text-sm"><span class="text-gray-300">Client: Ramesh Kumar (PAN: ABCDE1234F)</span><span class="bg-blue-900 text-blue-200 text-xs px-2 py-0.5 rounded">ITR-3</span></div>
+              <div class="mt-2 flex gap-2 flex-wrap"><button class="bg-indigo-600 text-white text-xs px-3 py-1 rounded">Download XML</button><button class="bg-green-700 text-white text-xs px-3 py-1 rounded">Generate JSON for e-filing</button><button class="bg-amber-600 text-xs px-3 py-1 rounded">Submit to IT portal</button></div>
+              <div class="text-xs text-gray-400 mt-2"><i class="far fa-clock"></i> Last updated: today 10:32 AM · Status: ready for e-file</div>
+            </div>
+            <div class="flex justify-between items-center pt-2"><span class="text-white text-sm">📤 Bulk actions: </span><button class="bg-gray-700 text-white px-3 py-1 text-sm rounded">Update return status</button><button class="bg-gray-700 text-white px-3 py-1 text-sm rounded"><i class="fas fa-envelope"></i> Trigger Email Notification</button></div>
+            <div class="text-indigo-300 text-xs border-t border-gray-700 pt-3 mt-2 flex justify-between"><span>✅ Real-time filing status tracking enabled</span><i class="fas fa-shield-alt"></i></div>
+          </div>
+          <!-- show admin dashboard additional widgets: quick stats -->
+          <div class="grid grid-cols-2 gap-3 mt-5">
+            <div class="bg-gray-900 p-3 rounded"><div class="text-gray-400 text-xs">Total clients</div><div class="text-white text-xl font-bold">147</div></div>
+            <div class="bg-gray-900 p-3 rounded"><div class="text-gray-400 text-xs">e-Filed this month</div><div class="text-white text-xl font-bold">32</div></div>
+          </div>
+        </div>
+      </div>
+      <div class="bg-gray-800/30 px-6 py-3 text-right text-xs text-gray-400 border-t border-gray-700">Admin only: exportable client data, status updates, manual e-filing integration ready.</div>
+    </div>
+  </div>
+
+  <!-- ========================== FOOTER & HOW IT WORKS SECTION ========================== -->
+  <div id="how-it-works" class="bg-white py-16 border-t">
+    <div class="max-w-7xl mx-auto px-6 text-center">
+      <h2 class="text-2xl font-bold text-gray-800">How TaxEase Works (End-to-end SaaS flow)</h2>
+      <div class="grid md:grid-cols-4 gap-6 mt-10">
+        <div><i class="fas fa-user-plus text-3xl text-indigo-500"></i><h4 class="font-bold mt-2">1. Signup / Login</h4><p class="text-sm text-gray-500">User creates account, email verification</p></div>
+        <div><i class="fas fa-id-card text-3xl text-indigo-500"></i><h4 class="font-bold mt-2">2. KYC + ITR forms</h4><p class="text-sm text-gray-500">Submit PAN, Aadhaar, choose ITR-2/3</p></div>
+        <div><i class="fas fa-calculator text-3xl text-indigo-500"></i><h4 class="font-bold mt-2">3. Real-time tax calc</h4><p class="text-sm text-gray-500">Dynamic tax liability & draft PDF</p></div>
+        <div><i class="fas fa-credit-card text-3xl text-indigo-500"></i><h4 class="font-bold mt-2">4. Payment + Filing</h4><p class="text-sm text-gray-500">Collect payment & admin e-filing</p></div>
+      </div>
+      <div class="mt-8 p-4 bg-indigo-50 rounded-2xl inline-block"><i class="fas fa-envelope-open-text mr-2 text-indigo-600"></i> Email notifications at every step (KYC, document upload, filing status)</div>
+    </div>
+  </div>
+
+  <!-- Payment collection & toast preview -->
+  <div class="border-t border-gray-200 bg-gray-50 py-8 text-center text-sm text-gray-500">
+    <div class="max-w-4xl mx-auto px-6 flex flex-wrap justify-between items-center">
+      <span>🔒 Secure payment gateway (Razorpay/Stripe ready)</span>
+      <span><i class="fas fa-check-circle text-green-500"></i> Real-time tax calculation engine</span>
+      <span><i class="fas fa-file-pdf"></i> Auto PDF draft generation</span>
+    </div>
+    <div class="mt-3 text-xs text-gray-400">© 2025 TaxEase Filing — Complete solution for ITR-2/ITR-3, admin dashboard, manual e-filing workflow & exportable client data.</div>
+  </div>
+
+  <!-- simple interactive simulation of UI (fully responsive) -->
+  <script>
+    // Just for demonstration - interactive dummy console logs for buttons
+    document.querySelectorAll('button').forEach(btn => {
+      if(!btn.hasAttribute('data-listener')) {
+        btn.setAttribute('data-listener', 'true');
+        btn.addEventListener('click', (e) => {
+          if(btn.innerText.includes('Generate Draft PDF') || btn.innerText.includes('Pay') || btn.innerText.includes('Recalculate') || btn.innerText.includes('Start Filing') || btn.innerText.includes('approve')) {
+            e.preventDefault();
+            alert('Demo mode: This would trigger PDF generation / payment / real tax calculation in production. Full backend integration ready.');
+          } else if(btn.innerText.includes('Export client data')) {
+            alert('Admin export feature: client data, return statuses in CSV/Excel format (mock).');
+          } else if(btn.innerText.includes('Submit to IT portal')) {
+            alert('Admin manual e-filing workflow: XML/JSON generation and submission simulation.');
+          }
+        });
+      }
+    });
+  </script>
+</body>
+</html>

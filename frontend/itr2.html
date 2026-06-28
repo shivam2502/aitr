@@ -1,0 +1,738 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ITR-2 Filing System | Income Tax Return</title>
+    <script src="https://cdn.tailwindcss.com">
+        const token = localStorage.getItem('itr2_token');
+        if (!token) window.location.href = 'login.html';s
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        .section-card { transition: all 0.2s; border-left: 4px solid #4f46e5; }
+        .section-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        .nav-step { cursor: pointer; transition: all 0.2s; }
+        .nav-step.active { background: #4f46e5; color: white; }
+        .nav-step.completed { background: #10b981; color: white; }
+        .field-required::after { content: "*"; color: #ef4444; margin-left: 2px; }
+        .error-border { border-color: #ef4444; }
+        .success-border { border-color: #10b981; }
+    </style>
+</head>
+<body class="bg-gray-50">
+
+<!-- Navigation -->
+<nav class="bg-white shadow-sm sticky top-0 z-50 border-b">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+            <div class="flex items-center">
+                <i class="fas fa-file-invoice text-2xl text-indigo-600"></i>
+                <span class="ml-2 text-xl font-bold text-gray-800">ITR-2 Filing System</span>
+                <span class="ml-2 text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">AY 2026-27</span>
+            </div>
+            <div class="flex gap-2">
+                <button id="saveDraftBtn" class="px-4 py-2 text-sm bg-gray-100 rounded-lg hover:bg-gray-200">
+                    <i class="fas fa-save"></i> Save Draft
+                </button>
+                <button id="validateBtn" class="px-4 py-2 text-sm bg-indigo-600 text-white rounded-lg hover:bg-indigo-700">
+                    <i class="fas fa-check-circle"></i> Validate & Generate JSON
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Progress Steps -->
+<div class="bg-white border-b sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-4 py-3">
+        <div class="flex flex-wrap gap-2 justify-between">
+            <div class="nav-step step-1 px-4 py-2 rounded-lg text-sm font-medium bg-indigo-600 text-white">1. Personal Info</div>
+            <div class="nav-step step-2 px-4 py-2 rounded-lg text-sm font-medium bg-gray-200">2. Salary</div>
+            <div class="nav-step step-3 px-4 py-2 rounded-lg text-sm font-medium bg-gray-200">3. House Property</div>
+            <div class="nav-step step-4 px-4 py-2 rounded-lg text-sm font-medium bg-gray-200">4. Capital Gains</div>
+            <div class="nav-step step-5 px-4 py-2 rounded-lg text-sm font-medium bg-gray-200">5. Other Sources</div>
+            <div class="nav-step step-6 px-4 py-2 rounded-lg text-sm font-medium bg-gray-200">6. Deductions</div>
+            <div class="nav-step step-7 px-4 py-2 rounded-lg text-sm font-medium bg-gray-200">7. Tax Summary</div>
+        </div>
+    </div>
+</div>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+    
+    <!-- Section 1: Personal Information -->
+    <div id="section-1" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-user-circle text-indigo-600 mr-2"></i> Part A - Personal Information
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">First Name</label>
+                <input type="text" id="firstName" class="mt-1 w-full border rounded-lg p-2" placeholder="Enter first name">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Middle Name</label>
+                <input type="text" id="middleName" class="mt-1 w-full border rounded-lg p-2" placeholder="Enter middle name">
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 field-required">Last Name / Surname</label>
+                <input type="text" id="lastName" class="mt-1 w-full border rounded-lg p-2" placeholder="Enter last name / surname">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">PAN Card Number</label>
+                <input type="text" id="pan" class="mt-1 w-full border rounded-lg p-2 uppercase" placeholder="ABCDE1234F" maxlength="10">
+                <p class="text-xs text-gray-400 mt-1">Format: 5 letters, 4 digits, 1 letter</p>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Aadhaar Number</label>
+                <input type="text" id="aadhaar" class="mt-1 w-full border rounded-lg p-2" placeholder="12 digit Aadhaar" maxlength="12">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">Date of Birth</label>
+                <input type="date" id="dob" class="mt-1 w-full border rounded-lg p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">Status</label>
+                <select id="status" class="mt-1 w-full border rounded-lg p-2">
+                    <option value="">Select</option>
+                    <option value="I">Individual</option>
+                    <option value="H">Hindu Undivided Family (HUF)</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">Residential Status</label>
+                <select id="resStatus" class="mt-1 w-full border rounded-lg p-2">
+                    <option value="">Select</option>
+                    <option value="RES">Resident</option>
+                    <option value="NOR">Resident but Not Ordinarily Resident</option>
+                    <option value="NRI">Non-Resident</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">Email ID</label>
+                <input type="email" id="email" class="mt-1 w-full border rounded-lg p-2" placeholder="your@email.com">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">Mobile Number</label>
+                <input type="tel" id="mobile" class="mt-1 w-full border rounded-lg p-2" placeholder="10 digit mobile" maxlength="10">
+            </div>
+        </div>
+
+        <h3 class="font-semibold mt-6 mb-3">Residential Address</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 field-required">House/Flat/Building No.</label>
+                <input type="text" id="addressLine1" class="mt-1 w-full border rounded-lg p-2">
+            </div>
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700">Road/Street/Lane</label>
+                <input type="text" id="addressLine2" class="mt-1 w-full border rounded-lg p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">City/District</label>
+                <input type="text" id="city" class="mt-1 w-full border rounded-lg p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">State</label>
+                <select id="state" class="mt-1 w-full border rounded-lg p-2">
+                    <option value="">Select State</option>
+                    <option value="09">Delhi</option>
+                    <option value="19">Maharashtra</option>
+                    <option value="11">Gujarat</option>
+                    <option value="29">Tamil Nadu</option>
+                    <option value="15">Karnataka</option>
+                    <option value="31">Uttar Pradesh</option>
+                    <option value="27">Rajasthan</option>
+                    <option value="05">Bihar</option>
+                    <option value="02">Andhra Pradesh</option>
+                    <option value="36">Telangana</option>
+                    <option value="26">Punjab</option>
+                    <option value="24">Odisha</option>
+                    <option value="18">Madhya Pradesh</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700 field-required">PIN Code</label>
+                <input type="text" id="pincode" class="mt-1 w-full border rounded-lg p-2" maxlength="6">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Country (if outside India)</label>
+                <input type="text" id="country" class="mt-1 w-full border rounded-lg p-2" placeholder="India">
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-end">
+            <button class="next-btn-1 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Next: Salary Details →</button>
+        </div>
+    </div>
+
+    <!-- Section 2: Schedule S - Salary -->
+    <div id="section-2" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-briefcase text-indigo-600 mr-2"></i> Schedule S - Income from Salary
+        </h2>
+        
+        <div class="grid md:grid-cols-2 gap-4">
+            <div class="md:col-span-2">
+                <label class="block text-sm font-medium text-gray-700">Employer Name</label>
+                <input type="text" id="employerName" class="mt-1 w-full border rounded-lg p-2">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Employer TAN</label>
+                <input type="text" id="employerTan" class="mt-1 w-full border rounded-lg p-2 uppercase" placeholder="ABCD12345E">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Nature of Employment</label>
+                <select id="natureEmploy" class="mt-1 w-full border rounded-lg p-2">
+                    <option value="CGOV">Central Government</option>
+                    <option value="SGOV">State Government</option>
+                    <option value="PSU">Public Sector Undertaking</option>
+                    <option value="OTH">Others</option>
+                </select>
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Gross Salary (₹)</label>
+                <input type="number" id="grossSalary" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Value of Perquisites (₹)</label>
+                <input type="number" id="perquisites" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Profits in lieu of Salary (₹)</label>
+                <input type="number" id="profitsInLieu" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+        </div>
+
+        <h3 class="font-semibold mt-6 mb-3">Allowances Exempt under Section 10</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">House Rent Allowance (HRA) Exempt (₹)</label>
+                <input type="number" id="hraExempt" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Leave Travel Allowance (LTA) (₹)</label>
+                <input type="number" id="ltaExempt" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Other Exempt Allowances (₹)</label>
+                <input type="number" id="otherExempt" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+        </div>
+
+        <h3 class="font-semibold mt-6 mb-3">Deductions under Section 16</h3>
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Standard Deduction u/s 16(ia) (Max ₹75,000)</label>
+                <input type="number" id="stdDeduction" class="mt-1 w-full border rounded-lg p-2" value="75000" max="75000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Entertainment Allowance u/s 16(ii) (₹)</label>
+                <input type="number" id="entertainmentAllowance" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Professional Tax u/s 16(iii) (₹)</label>
+                <input type="number" id="professionalTax" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+            <button class="prev-btn-2 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">← Previous</button>
+            <button class="next-btn-2 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Next: House Property →</button>
+        </div>
+    </div>
+
+    <!-- Section 3: Schedule HP - House Property -->
+    <div id="section-3" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-home text-indigo-600 mr-2"></i> Schedule HP - Income from House Property
+        </h2>
+        
+        <div class="bg-yellow-50 p-3 rounded-lg mb-4 text-sm">
+            <i class="fas fa-info-circle text-yellow-600"></i> If you own more than one house property, click "Add Property" below
+        </div>
+
+        <div id="propertyList">
+            <div class="property-item border rounded-lg p-4 mb-4">
+                <div class="grid md:grid-cols-2 gap-4">
+                    <div class="md:col-span-2">
+                        <label class="block text-sm font-medium text-gray-700">Property Address</label>
+                        <input type="text" class="propAddress w-full border rounded-lg p-2" placeholder="Full address of property">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Nature of Property</label>
+                        <select class="propNature w-full border rounded-lg p-2">
+                            <option value="S">Self-Occupied</option>
+                            <option value="L">Let Out</option>
+                            <option value="D">Deemed to be Let Out</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Property Co-owned?</label>
+                        <select class="propCoOwned w-full border rounded-lg p-2">
+                            <option value="NO">No</option>
+                            <option value="YES">Yes</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Annual Value / Rent Received (₹)</label>
+                        <input type="number" class="propAnnualValue w-full border rounded-lg p-2" value="0">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Interest on Home Loan (₹)</label>
+                        <input type="number" class="propInterest w-full border rounded-lg p-2" value="0">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">30% of Annual Value Deduction (Auto)</label>
+                        <input type="number" class="propDeduction w-full border rounded-lg p-2 bg-gray-100" readonly>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">Income/Loss from Property (₹)</label>
+                        <input type="number" class="propIncome w-full border rounded-lg p-2 bg-gray-100" readonly>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <button id="addPropertyBtn" class="text-indigo-600 text-sm mb-4"><i class="fas fa-plus"></i> Add Another Property</button>
+
+        <div class="mt-6 flex justify-between">
+            <button class="prev-btn-3 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">← Previous</button>
+            <button class="next-btn-3 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Next: Capital Gains →</button>
+        </div>
+    </div>
+
+    <!-- Section 4: Schedule CG - Capital Gains -->
+    <div id="section-4" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-chart-line text-indigo-600 mr-2"></i> Schedule CG - Capital Gains
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Short Term Capital Gains (20% rate) (₹)</label>
+                <input type="number" id="stcg20" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Short Term Capital Gains (30% rate) (₹)</label>
+                <input type="number" id="stcg30" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Short Term Capital Gains (Applicable Rate) (₹)</label>
+                <input type="number" id="stcgApp" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Long Term Capital Gains (12.5% rate) (₹)</label>
+                <input type="number" id="ltcg125" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">LTCG u/s 112A (Equity shares) (₹)</label>
+                <input type="number" id="ltcg112a" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Virtual Digital Assets (VDA) Gains (₹)</label>
+                <input type="number" id="vdaGains" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+            <button class="prev-btn-4 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">← Previous</button>
+            <button class="next-btn-4 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Next: Other Sources →</button>
+        </div>
+    </div>
+
+    <!-- Section 5: Schedule OS - Other Sources -->
+    <div id="section-5" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-coins text-indigo-600 mr-2"></i> Schedule OS - Income from Other Sources
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Interest from Savings Account (₹)</label>
+                <input type="number" id="savingsInterest" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Interest from Fixed Deposits (₹)</label>
+                <input type="number" id="fdInterest" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Dividend Income (₹)</label>
+                <input type="number" id="dividend" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Family Pension Received (₹)</label>
+                <input type="number" id="familyPension" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Winnings from Lottery/Puzzles (₹)</label>
+                <input type="number" id="lottery" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Other Income (₹)</label>
+                <input type="number" id="otherIncome" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+            <button class="prev-btn-5 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">← Previous</button>
+            <button class="next-btn-5 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Next: Deductions →</button>
+        </div>
+    </div>
+
+    <!-- Section 6: Schedule VIA - Deductions -->
+    <div id="section-6" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-gift text-indigo-600 mr-2"></i> Schedule VIA - Chapter VI-A Deductions
+        </h2>
+
+        <div class="grid md:grid-cols-2 gap-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80C (LIC, PPF, ELSS, etc.) (Max ₹1.5L) (₹)</label>
+                <input type="number" id="sec80c" class="mt-1 w-full border rounded-lg p-2" value="0" max="150000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80CCC (Pension Fund) (₹)</label>
+                <input type="number" id="sec80ccc" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80CCD(1) - Employee NPS (₹)</label>
+                <input type="number" id="sec80ccd1" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80CCD(1B) - Additional NPS (Max ₹50k) (₹)</label>
+                <input type="number" id="sec80ccd1b" class="mt-1 w-full border rounded-lg p-2" value="0" max="50000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80D - Health Insurance (Self/Family) (₹)</label>
+                <input type="number" id="sec80d" class="mt-1 w-full border rounded-lg p-2" value="0" max="25000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80D - Health Insurance (Parents) (₹)</label>
+                <input type="number" id="sec80dParents" class="mt-1 w-full border rounded-lg p-2" value="0" max="25000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80E - Education Loan Interest (₹)</label>
+                <input type="number" id="sec80e" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80G - Donations (₹)</label>
+                <input type="number" id="sec80g" class="mt-1 w-full border rounded-lg p-2" value="0">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80TTA - Savings Interest (Max ₹10k) (₹)</label>
+                <input type="number" id="sec80tta" class="mt-1 w-full border rounded-lg p-2" value="0" max="10000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80TTB - Senior Citizen Interest (Max ₹50k) (₹)</label>
+                <input type="number" id="sec80ttb" class="mt-1 w-full border rounded-lg p-2" value="0" max="50000">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-700">Section 80U - Disability (₹)</label>
+                <input type="number" id="sec80u" class="mt-1 w-full border rounded-lg p-2" value="0" max="125000">
+            </div>
+        </div>
+
+        <div class="mt-6 bg-gray-50 p-4 rounded-lg">
+            <h3 class="font-semibold">Total Deductions under Chapter VI-A</h3>
+            <p id="totalDeductions" class="text-2xl font-bold text-green-600">₹0</p>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+            <button class="prev-btn-6 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">← Previous</button>
+            <button class="next-btn-6 bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700">Next: Tax Summary →</button>
+        </div>
+    </div>
+
+    <!-- Section 7: Tax Summary & Computation -->
+    <div id="section-7" class="section-card bg-white rounded-xl shadow-sm p-6 mb-6 hidden">
+        <h2 class="text-xl font-bold mb-4 flex items-center">
+            <i class="fas fa-calculator text-indigo-600 mr-2"></i> Tax Summary & Computation
+        </h2>
+
+        <div class="bg-indigo-50 p-4 rounded-lg mb-6">
+            <h3 class="font-semibold text-lg">Income Summary</h3>
+            <div class="grid md:grid-cols-2 gap-3 mt-3">
+                <div class="flex justify-between"><span>Income from Salary:</span><span id="salarySummary" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between"><span>Income from House Property:</span><span id="hpSummary" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between"><span>Income from Capital Gains:</span><span id="cgSummary" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between"><span>Income from Other Sources:</span><span id="osSummary" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between border-t pt-2"><span>Gross Total Income:</span><span id="grossTotal" class="font-semibold text-xl">₹0</span></div>
+                <div class="flex justify-between"><span>Total Deductions (80C to 80U):</span><span id="dedSummary" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between border-t pt-2"><span>Net Taxable Income:</span><span id="taxableIncome" class="font-bold text-xl text-indigo-700">₹0</span></div>
+            </div>
+        </div>
+
+        <div class="bg-green-50 p-4 rounded-lg">
+            <h3 class="font-semibold text-lg">Tax Liability</h3>
+            <div class="grid md:grid-cols-2 gap-3 mt-3">
+                <div class="flex justify-between"><span>Income Tax Payable:</span><span id="incomeTax" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between"><span>Health & Education Cess (4%):</span><span id="cess" class="font-semibold">₹0</span></div>
+                <div class="flex justify-between border-t pt-2"><span>Total Tax Liability:</span><span id="totalTax" class="font-bold text-xl text-red-600">₹0</span></div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex justify-between">
+            <button class="prev-btn-7 bg-gray-200 text-gray-700 px-6 py-2 rounded-lg hover:bg-gray-300">← Previous</button>
+            <button id="generateJSONBtn" class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700">
+                <i class="fas fa-file-code"></i> Generate ITR-2 JSON
+            </button>
+        </div>
+    </div>
+
+    <!-- JSON Output -->
+    <div id="jsonOutput" class="hidden bg-gray-900 rounded-xl p-4 mt-6">
+        <div class="flex justify-between items-center mb-3">
+            <h3 class="text-white font-semibold"><i class="fas fa-code"></i> Generated ITR-2 JSON</h3>
+            <button id="copyJsonBtn" class="bg-gray-700 text-white px-3 py-1 rounded text-sm"><i class="fas fa-copy"></i> Copy</button>
+        </div>
+        <pre id="jsonContent" class="text-xs text-green-400 overflow-auto max-h-96"></pre>
+    </div>
+</div>
+
+<script>
+    // Calculate property income
+    function calculatePropertyIncome(propDiv) {
+        let annualValue = parseFloat(propDiv.querySelector('.propAnnualValue').value) || 0;
+        let interest = parseFloat(propDiv.querySelector('.propInterest').value) || 0;
+        let deduction30 = annualValue * 0.3;
+        let income = Math.max(0, annualValue - deduction30 - interest);
+        if (propDiv.querySelector('.propNature').value === 'S') income = Math.max(0, -interest);
+        propDiv.querySelector('.propDeduction').value = deduction30.toFixed(0);
+        propDiv.querySelector('.propIncome').value = income.toFixed(0);
+        return income;
+    }
+
+    // Update all property calculations
+    function updateAllProperties() {
+        let totalHPIncome = 0;
+        document.querySelectorAll('.property-item').forEach(prop => {
+            totalHPIncome += calculatePropertyIncome(prop);
+        });
+        return totalHPIncome;
+    }
+
+    // Add property
+    document.getElementById('addPropertyBtn')?.addEventListener('click', function() {
+        let propertyList = document.getElementById('propertyList');
+        let newProp = propertyList.children[0].cloneNode(true);
+        newProp.querySelectorAll('input, select').forEach(el => el.value = '');
+        newProp.querySelector('.propAnnualValue').value = 0;
+        newProp.querySelector('.propInterest').value = 0;
+        propertyList.appendChild(newProp);
+        
+        newProp.querySelectorAll('.propAnnualValue, .propInterest, .propNature').forEach(el => {
+            el.addEventListener('change', () => updateAllProperties());
+        });
+    });
+
+    // Calculate total deductions
+    function calculateTotalDeductions() {
+        let total = 0;
+        total += Math.min(parseFloat(document.getElementById('sec80c')?.value) || 0, 150000);
+        total += parseFloat(document.getElementById('sec80ccc')?.value) || 0;
+        total += parseFloat(document.getElementById('sec80ccd1')?.value) || 0;
+        total += Math.min(parseFloat(document.getElementById('sec80ccd1b')?.value) || 0, 50000);
+        total += Math.min(parseFloat(document.getElementById('sec80d')?.value) || 0, 25000);
+        total += Math.min(parseFloat(document.getElementById('sec80dParents')?.value) || 0, 25000);
+        total += parseFloat(document.getElementById('sec80e')?.value) || 0;
+        total += parseFloat(document.getElementById('sec80g')?.value) || 0;
+        total += Math.min(parseFloat(document.getElementById('sec80tta')?.value) || 0, 10000);
+        total += Math.min(parseFloat(document.getElementById('sec80ttb')?.value) || 0, 50000);
+        total += Math.min(parseFloat(document.getElementById('sec80u')?.value) || 0, 125000);
+        
+        document.getElementById('totalDeductions').innerText = `₹${total.toLocaleString()}`;
+        return total;
+    }
+
+    // Calculate tax
+    function calculateTax(income) {
+        let tax = 0;
+        if (income <= 250000) tax = 0;
+        else if (income <= 500000) tax = (income - 250000) * 0.05;
+        else if (income <= 1000000) tax = 12500 + (income - 500000) * 0.2;
+        else tax = 12500 + 100000 + (income - 1000000) * 0.3;
+        return Math.round(tax);
+    }
+
+    // Update tax summary
+    function updateTaxSummary() {
+        let salary = parseFloat(document.getElementById('grossSalary')?.value) || 0;
+        let stdDed = Math.min(parseFloat(document.getElementById('stdDeduction')?.value) || 0, 75000);
+        let netSalary = Math.max(0, salary - stdDed);
+        
+        let hpIncome = updateAllProperties();
+        let stcg20 = parseFloat(document.getElementById('stcg20')?.value) || 0;
+        let stcg30 = parseFloat(document.getElementById('stcg30')?.value) || 0;
+        let stcgApp = parseFloat(document.getElementById('stcgApp')?.value) || 0;
+        let ltcg125 = parseFloat(document.getElementById('ltcg125')?.value) || 0;
+        let ltcg112a = parseFloat(document.getElementById('ltcg112a')?.value) || 0;
+        let vda = parseFloat(document.getElementById('vdaGains')?.value) || 0;
+        
+        let cgIncome = stcg20 + stcg30 + stcgApp + ltcg125 + ltcg112a + vda;
+        
+        let savingsInt = parseFloat(document.getElementById('savingsInterest')?.value) || 0;
+        let fdInt = parseFloat(document.getElementById('fdInterest')?.value) || 0;
+        let dividend = parseFloat(document.getElementById('dividend')?.value) || 0;
+        let familyPension = parseFloat(document.getElementById('familyPension')?.value) || 0;
+        let lottery = parseFloat(document.getElementById('lottery')?.value) || 0;
+        let other = parseFloat(document.getElementById('otherIncome')?.value) || 0;
+        
+        let osIncome = savingsInt + fdInt + dividend + familyPension + lottery + other;
+        
+        let grossTotal = netSalary + hpIncome + cgIncome + osIncome;
+        let deductions = calculateTotalDeductions();
+        let taxableIncome = Math.max(0, grossTotal - deductions);
+        let tax = calculateTax(taxableIncome);
+        let cess = Math.round(tax * 0.04);
+        let totalTax = tax + cess;
+        
+        document.getElementById('salarySummary').innerText = `₹${netSalary.toLocaleString()}`;
+        document.getElementById('hpSummary').innerText = `₹${hpIncome.toLocaleString()}`;
+        document.getElementById('cgSummary').innerText = `₹${cgIncome.toLocaleString()}`;
+        document.getElementById('osSummary').innerText = `₹${osIncome.toLocaleString()}`;
+        document.getElementById('grossTotal').innerText = `₹${grossTotal.toLocaleString()}`;
+        document.getElementById('dedSummary').innerText = `₹${deductions.toLocaleString()}`;
+        document.getElementById('taxableIncome').innerText = `₹${taxableIncome.toLocaleString()}`;
+        document.getElementById('incomeTax').innerText = `₹${tax.toLocaleString()}`;
+        document.getElementById('cess').innerText = `₹${cess.toLocaleString()}`;
+        document.getElementById('totalTax').innerText = `₹${totalTax.toLocaleString()}`;
+    }
+
+    // Navigation
+    let currentSection = 1;
+    function showSection(section) {
+        for(let i=1; i<=7; i++) {
+            document.getElementById(`section-${i}`).classList.add('hidden');
+        }
+        document.getElementById(`section-${section}`).classList.remove('hidden');
+        document.querySelectorAll('.nav-step').forEach((step, idx) => {
+            step.classList.remove('active', 'bg-indigo-600', 'text-white', 'bg-gray-200');
+            if(idx+1 === section) step.classList.add('active', 'bg-indigo-600', 'text-white');
+            else step.classList.add('bg-gray-200');
+        });
+        currentSection = section;
+        if(section === 7) updateTaxSummary();
+    }
+
+    // Event listeners for navigation
+    document.querySelector('.next-btn-1')?.addEventListener('click', () => showSection(2));
+    document.querySelector('.prev-btn-2')?.addEventListener('click', () => showSection(1));
+    document.querySelector('.next-btn-2')?.addEventListener('click', () => showSection(3));
+    document.querySelector('.prev-btn-3')?.addEventListener('click', () => showSection(2));
+    document.querySelector('.next-btn-3')?.addEventListener('click', () => showSection(4));
+    document.querySelector('.prev-btn-4')?.addEventListener('click', () => showSection(3));
+    document.querySelector('.next-btn-4')?.addEventListener('click', () => showSection(5));
+    document.querySelector('.prev-btn-5')?.addEventListener('click', () => showSection(4));
+    document.querySelector('.next-btn-5')?.addEventListener('click', () => showSection(6));
+    document.querySelector('.prev-btn-6')?.addEventListener('click', () => showSection(5));
+    document.querySelector('.next-btn-6')?.addEventListener('click', () => showSection(7));
+    document.querySelector('.prev-btn-7')?.addEventListener('click', () => showSection(6));
+
+    // Generate JSON
+    document.getElementById('generateJSONBtn')?.addEventListener('click', () => {
+        updateTaxSummary();
+        let jsonData = {
+            ITR: {
+                ITR2: {
+                    Form_ITR2: {
+                        FormName: "ITR-2",
+                        AssessmentYear: "2026",
+                        SchemaVer: "Ver1.0",
+                        FormVer: "Ver1.0"
+                    },
+                    PartA_GEN1: {
+                        PersonalInfo: {
+                            AssesseeName: {
+                                FirstName: document.getElementById('firstName')?.value || "",
+                                MiddleName: document.getElementById('middleName')?.value || "",
+                                SurNameOrOrgName: document.getElementById('lastName')?.value || ""
+                            },
+                            PAN: document.getElementById('pan')?.value || "",
+                            DOB: document.getElementById('dob')?.value || "",
+                            Status: document.getElementById('status')?.value || "",
+                            AadhaarCardNo: document.getElementById('aadhaar')?.value || "",
+                            Address: {
+                                ResidenceNo: document.getElementById('addressLine1')?.value || "",
+                                LocalityOrArea: document.getElementById('addressLine2')?.value || "",
+                                CityOrTownOrDistrict: document.getElementById('city')?.value || "",
+                                StateCode: document.getElementById('state')?.value || "",
+                                PinCode: parseInt(document.getElementById('pincode')?.value) || 0,
+                                CountryCode: "91",
+                                MobileNo: parseInt(document.getElementById('mobile')?.value) || 0,
+                                EmailAddress: document.getElementById('email')?.value || ""
+                            }
+                        },
+                        FilingStatus: {
+                            ReturnFileSec: 11,
+                            ResidentialStatus: document.getElementById('resStatus')?.value || "RES",
+                            OptOutNewTaxRegime: "N"
+                        }
+                    },
+                    ScheduleS: {
+                        TotIncUnderHeadSalaries: parseInt(document.getElementById('grossSalary')?.value) || 0
+                    },
+                    PartB_TI: {
+                        Salaries: parseInt(document.getElementById('grossSalary')?.value) || 0,
+                        DeductionsUnderScheduleVIA: parseInt(document.getElementById('totalDeductions')?.innerText?.replace(/[^0-9]/g, '')) || 0
+                    },
+                    Verification: {
+                        Declaration: {
+                            AssesseeVerName: document.getElementById('firstName')?.value + " " + (document.getElementById('lastName')?.value || ""),
+                            AssesseeVerPAN: document.getElementById('pan')?.value || ""
+                        }
+                    }
+                }
+            }
+        };
+        
+        document.getElementById('jsonContent').innerHTML = JSON.stringify(jsonData, null, 2);
+        document.getElementById('jsonOutput').classList.remove('hidden');
+
+        fetch('http:localhost:8000/api/itr2/submit', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${localStorage.getItem('itr2_token')}`
+        },
+        body: JSON.stringify(jsonData)
+        })
+        .then(res => {
+            if (!res.ok) throw new Error('Submission failed');
+            return res.json();
+        })
+        .then(data => {
+            alert('ITR-2 submitted successfully!');
+        })
+        .catch(err => {
+            alert('Error submitting: ' + err.message);
+        });
+        document.getElementById('copyJsonBtn')?.addEventListener('click', () => {
+            let text = document.getElementById('jsonContent').innerText;
+            navigator.clipboard.writeText(text);
+            alert('JSON copied to clipboard!');
+        });
+
+        document.getElementById('saveDraftBtn')?.addEventListener('click', () => {
+            localStorage.setItem('itr2_draft', JSON.stringify({
+                firstName: document.getElementById('firstName')?.value,
+                pan: document.getElementById('pan')?.value,
+                // ... save all fields
+            }));
+            alert('Draft saved!');
+        });
+    });
+
+
+    // Initialize property calculations
+    setTimeout(() => {
+        document.querySelectorAll('.propAnnualValue, .propInterest, .propNature').forEach(el => {
+            el.addEventListener('change', () => updateAllProperties());
+        });
+        updateAllProperties();
+    }, 100);
+</script>
+
+</body>
+</html>
